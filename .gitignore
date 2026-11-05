@@ -1,0 +1,4 @@
+etl/.cache/
+__pycache__/
+*.pyc
+.venv/
