@@ -1,0 +1,86 @@
+table dim_character
+	lineageTag: 67ce365a-77f2-53d0-8997-698f66a8a23d
+
+	column character_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e4cfbb4a-2216-54ae-90f3-6c61b7ae782a
+		summarizeBy: none
+		sourceColumn: character_id
+
+	column 'Персонаж (англ)'
+		dataType: string
+		lineageTag: 6a89d2c1-4b31-5ee6-9477-314a3b8e6993
+		summarizeBy: none
+		sourceColumn: Персонаж (англ)
+
+	column Персонаж
+		dataType: string
+		lineageTag: 2a3d1cb6-5737-5137-be4b-d5621caf13f1
+		summarizeBy: none
+		sourceColumn: Персонаж
+
+	column Элемент
+		dataType: string
+		lineageTag: 4410b150-0d35-5e13-bcf6-da2c74c358fe
+		summarizeBy: none
+		sourceColumn: Элемент
+
+	column Оружие
+		dataType: string
+		lineageTag: 343ca2ed-6f00-51e8-b60f-508bdbe03ca5
+		summarizeBy: none
+		sourceColumn: Оружие
+
+	column Редкость
+		dataType: string
+		lineageTag: d860edb4-cac6-5d5e-a208-08f2d8d95174
+		summarizeBy: none
+		sourceColumn: Редкость
+
+	column Регион
+		dataType: string
+		lineageTag: 5c5a7163-3c37-568f-87df-f4c163df3894
+		summarizeBy: none
+		sourceColumn: Регион
+
+	column Роль
+		dataType: string
+		lineageTag: d00fe924-7644-55f7-a761-beb1f45e0183
+		summarizeBy: none
+		sourceColumn: Роль
+
+	column 'Тип баннера'
+		dataType: string
+		lineageTag: fa27fbd7-3608-58aa-bab8-62174f7f21b2
+		summarizeBy: none
+		sourceColumn: Тип баннера
+
+	column 'Версия выхода'
+		dataType: string
+		lineageTag: adee270b-2f83-5087-ba86-d7a0fb24b957
+		summarizeBy: none
+		sourceColumn: Версия выхода
+		sortByColumn: release_version_sort
+
+	column release_version_sort
+		dataType: double
+		isHidden
+		formatString: 0.00
+		lineageTag: a1cebb5c-dc6b-5eed-acac-e34c76c5a31c
+		summarizeBy: none
+		sourceColumn: release_version_sort
+
+	partition dim_character = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_character.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"character_id", Int64.Type}, {"name_en", type text}, {"name_ru", type text}, {"element", type text}, {"weapon", type text}, {"rarity", type text}, {"region", type text}, {"role", type text}, {"banner_type", type text}, {"release_version", type text}, {"release_version_sort", type number}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"name_en", "Персонаж (англ)"}, {"name_ru", "Персонаж"}, {"element", "Элемент"}, {"weapon", "Оружие"}, {"rarity", "Редкость"}, {"region", "Регион"}, {"role", "Роль"}, {"banner_type", "Тип баннера"}, {"release_version", "Версия выхода"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

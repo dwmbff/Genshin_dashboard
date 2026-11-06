@@ -1,0 +1,230 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "table_attention",
+  "position": {
+    "x": 428,
+    "y": 452,
+    "z": 21000,
+    "height": 262,
+    "width": 836
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_character"
+                    }
+                  },
+                  "Property": "Персонаж"
+                }
+              },
+              "queryRef": "dim_character.Персонаж",
+              "nativeQueryRef": "Персонаж"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_character"
+                    }
+                  },
+                  "Property": "Элемент"
+                }
+              },
+              "queryRef": "dim_character.Элемент",
+              "nativeQueryRef": "Элемент"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_character"
+                    }
+                  },
+                  "Property": "Роль"
+                }
+              },
+              "queryRef": "dim_character.Роль",
+              "nativeQueryRef": "Роль"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_abyss_usage"
+                    }
+                  },
+                  "Property": "Внимание: usage rate, %"
+                }
+              },
+              "queryRef": "fact_abyss_usage.Внимание: usage rate, %",
+              "nativeQueryRef": "Внимание: usage rate, %",
+              "displayName": "Usage rate, %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_abyss_usage"
+                    }
+                  },
+                  "Property": "Внимание: Δ к прошлому периоду (пп)"
+                }
+              },
+              "queryRef": "fact_abyss_usage.Внимание: Δ к прошлому периоду (пп)",
+              "nativeQueryRef": "Внимание: Δ к прошлому периоду (пп)",
+              "displayName": "Δ к прошлому периоду, п.п."
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_abyss_usage"
+                    }
+                  },
+                  "Property": "Внимание: отклонение от коридора (пп)"
+                }
+              },
+              "queryRef": "fact_abyss_usage.Внимание: отклонение от коридора (пп)",
+              "nativeQueryRef": "Внимание: отклонение от коридора (пп)",
+              "displayName": "Отклонение от коридора, п.п."
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_abyss_usage"
+                    }
+                  },
+                  "Property": "Внимание: причина"
+                }
+              },
+              "queryRef": "fact_abyss_usage.Внимание: причина",
+              "nativeQueryRef": "Внимание: причина",
+              "displayName": "Причина"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_abyss_usage"
+                  }
+                },
+                "Property": "Внимание: Δ к прошлому периоду (пп)"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Требуют внимания: выход за коридор или изменение ≥ 10 п.п. к прошлому периоду'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#252423'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

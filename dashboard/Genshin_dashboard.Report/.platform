@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Genshin_dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5abf8d6e-c57d-406b-b133-0afe0d9749a8"
+  }
+}

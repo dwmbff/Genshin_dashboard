@@ -1,0 +1,29 @@
+table 'Выбор периода'
+	lineageTag: 642f52ed-f08a-56da-b1ff-fd6305fed8da
+
+	column Период
+		dataType: string
+		lineageTag: 6da27a0c-27c8-518c-8683-ab2e5178e3e6
+		summarizeBy: none
+		sourceColumn: Период
+		sortByColumn: №
+
+	column №
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 946172a7-5fd1-59cc-aa79-91f3c217d8a2
+		summarizeBy: none
+		sourceColumn: №
+
+	partition 'Выбор периода' = m
+		mode: import
+		source =
+				let
+				    Source = Table.SelectColumns(dim_period, {"Период", "period_order"}),
+				    Renamed = Table.RenameColumns(Source, {{"period_order", "№"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

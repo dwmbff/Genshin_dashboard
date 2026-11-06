@@ -1,0 +1,93 @@
+table dim_period
+	lineageTag: 76027aee-61af-5eb3-a810-3bce09b0fa1c
+
+	column period_id
+		dataType: string
+		lineageTag: 8cd1469e-e4d9-5b1d-bc69-c778dea3fdd0
+		summarizeBy: none
+		sourceColumn: period_id
+
+	column Версия
+		dataType: string
+		lineageTag: 84b3b2a7-0d6b-5bc1-a29a-a356229cce40
+		summarizeBy: none
+		sourceColumn: Версия
+		sortByColumn: version_order
+
+	column Фаза
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e1fe4e9-0e96-53ca-9033-a7e2286c2b3d
+		summarizeBy: none
+		sourceColumn: Фаза
+
+	column Период
+		dataType: string
+		lineageTag: 1aa99563-2a09-56c5-aa47-f260d2883d10
+		summarizeBy: none
+		sourceColumn: Период
+		sortByColumn: period_order
+
+	column Начало
+		dataType: dateTime
+		formatString: dd.MM.yyyy
+		lineageTag: 427e6391-a930-5896-a6f1-2dc6549d736a
+		summarizeBy: none
+		sourceColumn: Начало
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Окончание
+		dataType: dateTime
+		formatString: dd.MM.yyyy
+		lineageTag: 0d148575-fd6d-5452-b295-035b1dc0683a
+		summarizeBy: none
+		sourceColumn: Окончание
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column period_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5b561fe3-b21b-5ee4-a213-ddba9efd198d
+		summarizeBy: none
+		sourceColumn: period_order
+
+	column version_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 37147099-8165-5549-bb8c-e97ec8d75784
+		summarizeBy: none
+		sourceColumn: version_order
+
+	column Год
+		dataType: int64
+		formatString: 0
+		lineageTag: d3358f8e-7cc6-5f79-94a9-2b52eeb4d5fb
+		summarizeBy: none
+		sourceColumn: Год
+
+	column Месяц
+		dataType: dateTime
+		formatString: dd.MM.yyyy
+		lineageTag: a886747b-3aed-5385-8cf7-be2282634ced
+		summarizeBy: none
+		sourceColumn: Месяц
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition dim_period = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_period.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"period_id", type text}, {"version", type text}, {"phase", Int64.Type}, {"period_label", type text}, {"start_date", type date}, {"end_date", type date}, {"period_order", Int64.Type}, {"version_order", Int64.Type}, {"year", Int64.Type}, {"month_start", type date}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"version", "Версия"}, {"phase", "Фаза"}, {"period_label", "Период"}, {"start_date", "Начало"}, {"end_date", "Окончание"}, {"year", "Год"}, {"month_start", "Месяц"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

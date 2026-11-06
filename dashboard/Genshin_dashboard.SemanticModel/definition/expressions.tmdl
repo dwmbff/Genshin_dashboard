@@ -1,0 +1,5 @@
+expression DataFolder = "C:\Users\Дарья\PycharmProjects\Genshin_dashboard\data\processed\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 582c12f9-1634-5fe0-b270-66b7123532a9
+
+	annotation PBI_ResultType = Text
+

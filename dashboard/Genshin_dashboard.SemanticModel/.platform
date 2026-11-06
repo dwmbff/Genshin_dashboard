@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Genshin_dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e05ca3b0-6174-4a36-9641-d3f3db1eb20b"
+  }
+}

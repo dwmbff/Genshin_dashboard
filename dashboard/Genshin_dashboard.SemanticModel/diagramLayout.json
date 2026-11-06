@@ -1,0 +1,74 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 852.38305001469371,
+            "y": 102.42234897992228
+          },
+          "nodeIndex": "Выбор периода",
+          "nodeLineageTag": "642f52ed-f08a-56da-b1ff-fd6305fed8da",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.38305001469371,
+            "y": -49.999999999999972
+          },
+          "nodeIndex": "dim_character",
+          "nodeLineageTag": "67ce365a-77f2-53d0-8997-698f66a8a23d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": -20.014889220402949
+          },
+          "nodeIndex": "dim_period",
+          "nodeLineageTag": "76027aee-61af-5eb3-a810-3bce09b0fa1c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.20156119318517,
+            "y": -17.155302040155391
+          },
+          "nodeIndex": "fact_abyss_usage",
+          "nodeLineageTag": "5ca2bdfe-3186-5bbd-9ffd-b856bcb9439b",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Все таблицы",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Все таблицы",
+  "defaultDiagram": "Все таблицы"
+}

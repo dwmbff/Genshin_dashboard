@@ -1,0 +1,95 @@
+cultureInfo ru-RU
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "fact_abyss_usage.внимание_usage_rate_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_abyss_usage",
+			          "ConceptualProperty": "Внимание: usage rate, %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Usage rate, %": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_abyss_usage.внимание_δ_к_прошлому_периоду_пп": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_abyss_usage",
+			          "ConceptualProperty": "Внимание: Δ к прошлому периоду (пп)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Δ к прошлому периоду, п.п.": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_abyss_usage.внимание_отклонение_от_коридора_пп": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_abyss_usage",
+			          "ConceptualProperty": "Внимание: отклонение от коридора (пп)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Отклонение от коридора, п.п.": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_abyss_usage.внимание_причина": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_abyss_usage",
+			          "ConceptualProperty": "Внимание: причина"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Причина": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

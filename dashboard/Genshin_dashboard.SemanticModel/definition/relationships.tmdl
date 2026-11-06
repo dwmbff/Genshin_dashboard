@@ -1,0 +1,8 @@
+relationship 5d0164af-648c-5712-b227-4121f852b5e0
+	fromColumn: fact_abyss_usage.period_id
+	toColumn: dim_period.period_id
+
+relationship 2dd12058-5039-5d0a-9a2f-2146baf05a82
+	fromColumn: fact_abyss_usage.character_id
+	toColumn: dim_character.character_id
+

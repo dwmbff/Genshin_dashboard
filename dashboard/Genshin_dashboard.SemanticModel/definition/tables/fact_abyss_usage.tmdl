@@ -1,0 +1,427 @@
+table fact_abyss_usage
+	lineageTag: 5ca2bdfe-3186-5bbd-9ffd-b856bcb9439b
+
+	measure 'Выбранный период №' =
+			VAR s = SELECTEDVALUE('Выбор периода'[№])
+			RETURN
+			    IF(ISBLANK(s), CALCULATE(MAX(dim_period[period_order]), REMOVEFILTERS(dim_period)), s)
+		formatString: 0
+		displayFolder: Служебные
+		lineageTag: 023c78e5-bd51-590d-98ad-88e6efdc5a1a
+
+	measure 'Подпись периода' =
+			VAR p = [Выбранный период №]
+			VAR cur = CALCULATE(MAX(dim_period[Период]), REMOVEFILTERS(dim_period), dim_period[period_order] = p)
+			VAR prev = CALCULATE(MAX(dim_period[Период]), REMOVEFILTERS(dim_period), dim_period[period_order] = p - 1)
+			RETURN
+			    "Период: " & cur & IF(ISBLANK(prev), "", "  ·  сравнение с периодом " & prev) & "  ·  целевой коридор usage rate: 5–40 %"
+		displayFolder: Служебные
+		lineageTag: fe8e9b0a-4970-58e0-9a1d-85100e8124c0
+
+	measure 'Usage rate, %' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(AVERAGE(fact_abyss_usage[usage_rate_pct]), REMOVEFILTERS(dim_period), dim_period[period_order] = p)
+		formatString: 0.0
+		displayFolder: Использование
+		lineageTag: 8a4096a0-1493-5693-b160-dad60e44438b
+
+	measure 'Usage rate прошлого периода, %' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(AVERAGE(fact_abyss_usage[usage_rate_pct]), REMOVEFILTERS(dim_period), dim_period[period_order] = p - 1)
+		formatString: 0.0
+		displayFolder: Использование
+		lineageTag: bcce6baa-6a5c-5610-a003-3a473b485db0
+
+	measure 'Δ usage rate (пп)' =
+			VAR c = [Usage rate, %]
+			VAR pr = [Usage rate прошлого периода, %]
+			RETURN
+			    IF(NOT ISBLANK(c) && NOT ISBLANK(pr), c - pr)
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Использование
+		lineageTag: 0d13fbaa-019a-5975-8516-93ba801d4017
+
+	measure 'Usage rate (динамика), %' = AVERAGE(fact_abyss_usage[usage_rate_pct])
+		formatString: 0.0
+		displayFolder: Использование
+		lineageTag: 9fac9210-5097-5e1a-8629-f8fc0b719ab7
+
+	measure 'Персонажей в анализе' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(COUNTROWS(fact_abyss_usage), REMOVEFILTERS(dim_period), dim_period[period_order] = p)
+		formatString: 0
+		displayFolder: Коридор
+		lineageTag: 3735454e-0c97-55a8-8646-7214ce667cee
+
+	measure 'Доминантов (>40%)' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(COUNTROWS(fact_abyss_usage), fact_abyss_usage[corridor_status] = "Доминант (>40%)", REMOVEFILTERS(dim_period), dim_period[period_order] = p) + 0
+		formatString: 0
+		displayFolder: Коридор
+		lineageTag: 53940f35-5a6a-551b-bdec-2db43fc96b94
+
+	measure 'Доминантов прошлого периода' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(COUNTROWS(fact_abyss_usage), fact_abyss_usage[corridor_status] = "Доминант (>40%)", REMOVEFILTERS(dim_period), dim_period[period_order] = p - 1) + 0
+		formatString: 0
+		displayFolder: Коридор
+		lineageTag: 6330fdb0-bd9f-5793-9afe-c1e4bcc06e7a
+
+	measure 'Невостребованных (<5%)' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(COUNTROWS(fact_abyss_usage), fact_abyss_usage[corridor_status] = "Невостребован (<5%)", REMOVEFILTERS(dim_period), dim_period[period_order] = p) + 0
+		formatString: 0
+		displayFolder: Коридор
+		lineageTag: 07134dfe-487f-5aa1-9054-32019761dbe7
+
+	measure 'Невостребованных прошлого периода' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    CALCULATE(COUNTROWS(fact_abyss_usage), fact_abyss_usage[corridor_status] = "Невостребован (<5%)", REMOVEFILTERS(dim_period), dim_period[period_order] = p - 1) + 0
+		formatString: 0
+		displayFolder: Коридор
+		lineageTag: dbb0c2e0-33b8-5898-b466-b024218d97ec
+
+	measure 'В коридоре, %' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    DIVIDE(
+			        CALCULATE(COUNTROWS(fact_abyss_usage), REMOVEFILTERS(dim_period), dim_period[period_order] = p, fact_abyss_usage[corridor_status] = "В коридоре"),
+			        CALCULATE(COUNTROWS(fact_abyss_usage), REMOVEFILTERS(dim_period), dim_period[period_order] = p)
+			    ) * 100
+		formatString: 0.0
+		displayFolder: Коридор
+		lineageTag: 6cb35ea7-5051-5b4b-a82e-ae2872645770
+
+	measure 'В коридоре прошлого периода, %' =
+			VAR p = [Выбранный период №]
+			RETURN
+			    DIVIDE(
+			        CALCULATE(COUNTROWS(fact_abyss_usage), REMOVEFILTERS(dim_period), dim_period[period_order] = p - 1, fact_abyss_usage[corridor_status] = "В коридоре"),
+			        CALCULATE(COUNTROWS(fact_abyss_usage), REMOVEFILTERS(dim_period), dim_period[period_order] = p - 1)
+			    ) * 100
+		formatString: 0.0
+		displayFolder: Коридор
+		lineageTag: 8e82a9f9-deff-55e6-89a3-688cb3367909
+
+	measure 'Доля топ-10 в использованиях, %' =
+			VAR p = [Выбранный период №]
+			VAR t =
+			    CALCULATETABLE(
+			        ADDCOLUMNS(VALUES(dim_character[character_id]), "@u", CALCULATE(SUM(fact_abyss_usage[users]))),
+			        REMOVEFILTERS(dim_period),
+			        dim_period[period_order] = p
+			    )
+			VAR topT = TOPN(10, t, [@u], DESC)
+			RETURN
+			    DIVIDE(SUMX(topT, [@u]), SUMX(t, [@u])) * 100
+		formatString: 0.0
+		displayFolder: Концентрация
+		lineageTag: c28c0754-5cf9-5dc3-a7a0-e694ce8aefba
+
+	measure 'Доля топ-10 прошлого периода, %' =
+			VAR p = [Выбранный период №] - 1
+			VAR t =
+			    CALCULATETABLE(
+			        ADDCOLUMNS(VALUES(dim_character[character_id]), "@u", CALCULATE(SUM(fact_abyss_usage[users]))),
+			        REMOVEFILTERS(dim_period),
+			        dim_period[period_order] = p
+			    )
+			VAR topT = TOPN(10, t, [@u], DESC)
+			RETURN
+			    DIVIDE(SUMX(topT, [@u]), SUMX(t, [@u])) * 100
+		formatString: 0.0
+		displayFolder: Концентрация
+		lineageTag: 7731c585-5fe2-51bd-a3c3-1a33c6011aaa
+
+	measure 'Δ текст: usage rate' =
+			VAR c = [Usage rate, %]
+			VAR pr = [Usage rate прошлого периода, %]
+			RETURN
+			    IF(
+			        ISBLANK(pr),
+			        "нет данных за прошлый период",
+			        "Δ " & FORMAT(c - pr, "+0.0;-0.0;0.0") & " п.п. к прошлому периоду"
+			    )
+		displayFolder: Сравнение
+		lineageTag: d2500bc7-6677-5916-a853-2180d51278ab
+
+	measure 'Δ текст: в коридоре' =
+			VAR c = [В коридоре, %]
+			VAR pr = [В коридоре прошлого периода, %]
+			RETURN
+			    IF(
+			        ISBLANK(pr),
+			        "нет данных за прошлый период",
+			        "Δ " & FORMAT(c - pr, "+0.0;-0.0;0.0") & " п.п. к прошлому периоду"
+			    )
+		displayFolder: Сравнение
+		lineageTag: 06aefa95-7c62-57ec-9870-78a570674400
+
+	measure 'Δ текст: доминанты' =
+			VAR c = [Доминантов (>40%)]
+			VAR pr = [Доминантов прошлого периода]
+			RETURN
+			    IF(
+			        ISBLANK(pr),
+			        "нет данных за прошлый период",
+			        "Δ " & FORMAT(c - pr, "+0;-0;0") & " шт. к прошлому периоду"
+			    )
+		displayFolder: Сравнение
+		lineageTag: d79a805a-3ea9-5935-8c71-354d01292502
+
+	measure 'Δ текст: невостребованные' =
+			VAR c = [Невостребованных (<5%)]
+			VAR pr = [Невостребованных прошлого периода]
+			RETURN
+			    IF(
+			        ISBLANK(pr),
+			        "нет данных за прошлый период",
+			        "Δ " & FORMAT(c - pr, "+0;-0;0") & " шт. к прошлому периоду"
+			    )
+		displayFolder: Сравнение
+		lineageTag: 63c3c239-85a2-5d94-9f1b-93b11425080a
+
+	measure 'Δ текст: топ-10' =
+			VAR c = [Доля топ-10 в использованиях, %]
+			VAR pr = [Доля топ-10 прошлого периода, %]
+			RETURN
+			    IF(
+			        ISBLANK(pr),
+			        "нет данных за прошлый период",
+			        "Δ " & FORMAT(c - pr, "+0.0;-0.0;0.0") & " п.п. к прошлому периоду"
+			    )
+		displayFolder: Сравнение
+		lineageTag: 4ca19a85-4427-55a3-946a-30bd9c675d31
+
+	measure 'План: нижняя граница, %' = IF(NOT ISBLANK([Usage rate, %]), 5)
+		formatString: 0
+		displayFolder: План
+		lineageTag: 5e12cc73-f348-53e0-a4c0-21ba874dc817
+
+	measure 'План: верхняя граница, %' = IF(NOT ISBLANK([Usage rate, %]), 40)
+		formatString: 0
+		displayFolder: План
+		lineageTag: ff4f4487-73bc-58d0-90fb-3fb2b49a6be5
+
+	measure 'Требует внимания' =
+			VAR u = [Usage rate, %]
+			VAR d = [Δ usage rate (пп)]
+			RETURN
+			    IF(NOT ISBLANK(u) && (u > 40 || u < 5 || ABS(d) >= 10), 1)
+		formatString: 0
+		displayFolder: Внимание
+		lineageTag: 608eb40a-e7a2-590f-9508-efc0c95f6ee4
+
+	measure 'Внимание: usage rate, %' = IF([Требует внимания] = 1, [Usage rate, %])
+		formatString: 0.0
+		displayFolder: Внимание
+		lineageTag: 313734c5-6f21-5f21-8ed8-3af60045dc16
+
+	measure 'Внимание: Δ к прошлому периоду (пп)' = IF([Требует внимания] = 1, [Δ usage rate (пп)])
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Внимание
+		lineageTag: b6449684-6c56-550c-8734-81a1bf745176
+
+	measure 'Внимание: отклонение от коридора (пп)' =
+			VAR u = [Usage rate, %]
+			RETURN
+			    IF([Требует внимания] = 1, SWITCH(TRUE(), u > 40, u - 40, u < 5, u - 5, 0))
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Внимание
+		lineageTag: f6157bae-a1cc-5019-a898-91df4a711b63
+
+	measure 'Внимание: причина' =
+			VAR u = [Usage rate, %]
+			VAR d = [Δ usage rate (пп)]
+			RETURN
+			    IF(
+			        [Требует внимания] = 1,
+			        SWITCH(
+			            TRUE(),
+			            u > 40, "Выше коридора",
+			            u < 5, "Ниже коридора",
+			            d > 0, "Резкий рост",
+			            "Резкое падение"
+			        )
+			    )
+		displayFolder: Внимание
+		lineageTag: 1d443366-3488-56e8-9e4b-d2b5b0bc369b
+
+	column record_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0b70391c-6f6c-5581-89c6-913f8e41e9a1
+		summarizeBy: none
+		sourceColumn: record_id
+
+	column period_id
+		dataType: string
+		isHidden
+		lineageTag: 66ddc9e0-5434-5812-bbba-7594739e25f6
+		summarizeBy: none
+		sourceColumn: period_id
+
+	column character_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3a11c584-6cfc-5cf3-9d9d-72646e7c2185
+		summarizeBy: none
+		sourceColumn: character_id
+
+	column cycle_date
+		dataType: dateTime
+		formatString: dd.MM.yyyy
+		lineageTag: ab9cf8f5-e2bc-53c0-b6aa-cb91487d08d8
+		summarizeBy: none
+		sourceColumn: cycle_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column players
+		dataType: int64
+		formatString: 0
+		lineageTag: fbe38c25-608e-57ed-8ddc-a465ecf7b490
+		summarizeBy: sum
+		sourceColumn: players
+
+	column owners
+		dataType: int64
+		formatString: 0
+		lineageTag: 65a4f5b2-e03f-582a-b7a8-da84aa6da4a7
+		summarizeBy: sum
+		sourceColumn: owners
+
+	column users
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e8522e4-61a5-5f7f-ab1a-781383e6fef4
+		summarizeBy: sum
+		sourceColumn: users
+
+	column owner_rate_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: dd9bea51-9a0f-5fc8-914a-0da9ca2a997c
+		summarizeBy: none
+		sourceColumn: owner_rate_pct
+
+	column usage_rate_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: a0ade991-0540-5223-99ee-c9ecaf32a7b6
+		summarizeBy: none
+		sourceColumn: usage_rate_pct
+
+	column presence_rate_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: 7d2ff31e-c6ee-578e-b465-4757dd0a3fc6
+		summarizeBy: none
+		sourceColumn: presence_rate_pct
+
+	column usage_rate_prev_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: 29c615b3-81e8-52e4-b1b6-a0b0cfdf0fd1
+		summarizeBy: none
+		sourceColumn: usage_rate_prev_pct
+
+	column usage_delta_pp
+		dataType: double
+		formatString: 0.00
+		lineageTag: 1898c1c4-37b2-5bd7-85a0-ded38c748531
+		summarizeBy: none
+		sourceColumn: usage_delta_pp
+
+	column plan_min_pct
+		dataType: double
+		isHidden
+		formatString: 0.00
+		lineageTag: 145adab2-8d9d-5112-b5fa-1e9a05a8f470
+		summarizeBy: none
+		sourceColumn: plan_min_pct
+
+	column plan_max_pct
+		dataType: double
+		isHidden
+		formatString: 0.00
+		lineageTag: 5bf61b98-49b7-5f96-b38e-6dc36dd7b1ed
+		summarizeBy: none
+		sourceColumn: plan_max_pct
+
+	column plan_deviation_pp
+		dataType: double
+		formatString: 0.00
+		lineageTag: 631a80cd-c486-55a8-a831-69a1af8482f2
+		summarizeBy: none
+		sourceColumn: plan_deviation_pp
+
+	column corridor_status
+		dataType: string
+		lineageTag: e00059b1-dbbf-5f34-b1a5-fd023e190fb9
+		summarizeBy: none
+		sourceColumn: corridor_status
+
+	column sharp_change_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: b782f9f2-d86f-503d-9b05-b606c959e08a
+		summarizeBy: none
+		sourceColumn: sharp_change_flag
+
+	column is_release_patch
+		dataType: int64
+		formatString: 0
+		lineageTag: 475e1d50-7c99-507a-a9e6-86d43fd6ae32
+		summarizeBy: none
+		sourceColumn: is_release_patch
+
+	column avg_damage_k
+		dataType: double
+		formatString: 0.00
+		lineageTag: 5306467f-ef4f-5af6-8689-526a6a68651a
+		summarizeBy: none
+		sourceColumn: avg_damage_k
+
+	column avg_damage_prev_k
+		dataType: double
+		formatString: 0.00
+		lineageTag: fe6a71f9-2341-5154-8342-1fe5909c362c
+		summarizeBy: none
+		sourceColumn: avg_damage_prev_k
+
+	column clear_rate_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: b5a99826-2013-5518-a5b7-50ac45656377
+		summarizeBy: none
+		sourceColumn: clear_rate_pct
+
+	column avg_clear_time_sec
+		dataType: double
+		formatString: 0.00
+		lineageTag: 2df95a55-16ae-56b1-ad70-4ba8c2c7fa7b
+		summarizeBy: none
+		sourceColumn: avg_clear_time_sec
+
+	partition fact_abyss_usage = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_abyss_usage.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"record_id", Int64.Type}, {"period_id", type text}, {"character_id", Int64.Type}, {"cycle_date", type date}, {"players", Int64.Type}, {"owners", Int64.Type}, {"users", Int64.Type}, {"owner_rate_pct", type number}, {"usage_rate_pct", type number}, {"presence_rate_pct", type number}, {"usage_rate_prev_pct", type number}, {"usage_delta_pp", type number}, {"plan_min_pct", type number}, {"plan_max_pct", type number}, {"plan_deviation_pp", type number}, {"corridor_status", type text}, {"sharp_change_flag", Int64.Type}, {"is_release_patch", Int64.Type}, {"avg_damage_k", type number}, {"avg_damage_prev_k", type number}, {"clear_rate_pct", type number}, {"avg_clear_time_sec", type number}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+
